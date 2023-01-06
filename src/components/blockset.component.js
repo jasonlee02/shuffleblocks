@@ -5,7 +5,8 @@ class Blockset extends React.Component{
         super(props)
 
         //blocks order: at index i, the corresponding value is values[blocksOrder[i]]
-        this.state = {blocksOrder: []}
+        this.state = {blocksOrder: [],
+                      highlighted: -1}
 
         this.handleDragStart = this.handleDragStart.bind(this)
         this.handleDragEnd = this.handleDragEnd.bind(this)
@@ -32,6 +33,10 @@ class Blockset extends React.Component{
     }
 
     handleDragEnd(){
+        if (this.draggedElement === -1 || this.dragTarget === -1){
+            this.setState({highlighted: -1});
+            return;
+        }
         let newOrder = this.state.blocksOrder;
         let draggedElementContent = newOrder[this.draggedElement]
         newOrder.splice(this.draggedElement, 1);
@@ -39,17 +44,20 @@ class Blockset extends React.Component{
         this.draggedElement = -1;
         this.dragTarget = -1;
         this.setState({
-            blocksOrder: newOrder
+            blocksOrder: newOrder,
+            highlighted: -1
         })
     }
 
     handleDragEnter(index){
         this.dragTarget = index;
+        this.setState({highlighted: index});
     }
 
-    handleDragExit(index){
+    handleDragExit(){
         this.dragTarget = -1;
-
+        this.setState({highlighted: -1});
+        //include highlighting while drag in the state?
     }
 
     render() {
@@ -58,7 +66,8 @@ class Blockset extends React.Component{
             <div className = "blockgroup">
                 {orderedValues.map((value, index) => <Block value={value} key={index} index={index}
                 dragStart = {this.handleDragStart} dragEnd = {this.handleDragEnd}
-                dragEnter = {this.handleDragEnter} dragExit = {this.handleDragExit} />)}
+                dragEnter = {this.handleDragEnter} dragExit = {this.handleDragExit} 
+                highlight = {this.state.highlighted === index ? true : false}/>)}
             </div>
         )
     };
@@ -87,13 +96,13 @@ class Block extends React.Component{
     }
 
     handleBlockDragExit(){
-        this.props.dragExit(this.props.index)
+        this.props.dragExit()
     }
     
     render(){
         return (
-            <span className = "blockcontainer" draggable onDragStart={this.handleBlockDragStart}
-            onDragEnd={this.handleBlockDragEnd} onDragEnter={this.handleBlockDragEnter}
+            <span className = {`blockcontainer ${this.props.highlight ? 'highlighted' : ''}`} draggable onDragStart={this.handleBlockDragStart}
+            onDrop={this.handleBlockDragEnd} onDragEnter={this.handleBlockDragEnter} onDragOver={(e) => {e.preventDefault()}}
             onDragExit={this.handleBlockDragExit}>
                 <span className = "blocktext">{this.props.value}</span>
             </span>
@@ -102,12 +111,3 @@ class Block extends React.Component{
 }
 
 export default Blockset;
-
-//design:
-/*
-    1 blockset object
-    state: list of positions of the block objects
-
-    5 block objects
-    props: the text to be listed in the block
-*/

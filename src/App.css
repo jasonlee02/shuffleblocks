@@ -10,6 +10,9 @@
     background-color: lightblue;
     justify-content: center;
 }
+.highlighted{
+    border: 4px solid yellow;
+}
 .blockgroup{
     display: inline-flex;
     justify-content: center;
