@@ -64,10 +64,11 @@ class Blockset extends React.Component{
         const orderedValues = this.state.blocksOrder.map((value) => this.props.values[value])
         return(
             <div className = "blockgroup">
-                {orderedValues.map((value, index) => <Block value={value} key={index} index={index}
-                dragStart = {this.handleDragStart} dragEnd = {this.handleDragEnd}
-                dragEnter = {this.handleDragEnter} dragExit = {this.handleDragExit} 
-                highlight = {this.state.highlighted === index ? true : false}/>)}
+                {orderedValues.map((value, index) => 
+                    <Block value={value} key={index} index={index}
+                    dragStart = {this.handleDragStart} dragEnd = {this.handleDragEnd}
+                    dragEnter = {this.handleDragEnter} dragExit = {this.handleDragExit} 
+                    highlight = {this.state.highlighted === index ? true : false}/>)}
             </div>
         )
     };
@@ -101,9 +102,9 @@ class Block extends React.Component{
     
     render(){
         return (
-            <span className = {`blockcontainer ${this.props.highlight ? 'highlighted' : ''}`} draggable onDragStart={this.handleBlockDragStart}
-            onDrop={this.handleBlockDragEnd} onDragEnter={this.handleBlockDragEnter} onDragOver={(e) => {e.preventDefault()}}
-            onDragExit={this.handleBlockDragExit}>
+            <span className = {`blockcontainer ${this.props.highlight ? 'highlighted' : ''}`} draggable 
+            onDragStart={this.handleBlockDragStart} onDrop={this.handleBlockDragEnd} onDragEnter={this.handleBlockDragEnter} 
+            onDragOver={(e) => {e.preventDefault()}} onDragExit={this.handleBlockDragExit}>
                 <span className = "blocktext">{this.props.value}</span>
             </span>
         );
